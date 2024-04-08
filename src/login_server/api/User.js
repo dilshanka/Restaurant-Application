@@ -45,6 +45,9 @@ const path=require("path");
 const { error } = require('console');
 const { errorMonitor } = require('events');
 
+
+
+
 const YOUR_DOMAIN = 'http://localhost:5000';
 
 router.post('/create-checkout-session', async (req, res) => {

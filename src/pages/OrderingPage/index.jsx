@@ -14,6 +14,49 @@ const OrderingPagePage = ({ logoutUser, user }) => {
   const [itemQuantities, setItemQuantities] = useState({});
   const [items, setItems] = useState([]);
   const [isHovered, setIsHovered] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true); // Set loading to true when form is submitted
+
+    try {
+      // Calculate total amount to pay
+      const total =
+        items.reduce((total, menuItem) => {
+          return (
+            total +
+            parseFloat(menuItem.price.replace("Rs. ", "")) *
+              (parseInt(itemQuantities[menuItem._id]) || 0)
+          );
+        }, 0) + 200; // Add delivery fee
+
+      // Send a POST request to create a checkout session
+      const response = await fetch(
+        "http://localhost:3001/create-checkout-session",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ total }), // Send total amount in the request body
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to create checkout session");
+        
+      }
+
+      const { url } = await response.json();
+      // Redirect to the checkout URL
+      window.location = url;
+    } catch (error) {
+      console.error("Error creating checkout session:", error);
+    } finally {
+      setLoading(false); // Set loading to false after request is completed
+    }
+  };
 
   const Message = ({ message }) => (
     <section>
@@ -384,84 +427,123 @@ const OrderingPagePage = ({ logoutUser, user }) => {
 
             <div className="absolute bottom-[0] md:h-[1360px] h-[1363px] right-[0] w-[30%] sm:w-full">
               <div className="md:h-[1360px] h-[1363px] m-auto w-full">
-
-                  <div className="flex flex-col items-center justify-start w-full">
-                    <div className="bg-teal-800 border border-black-900_1c border-solid flex flex-row gap-[30px] items-end justify-start p-[21px] sm:px-5 rounded-tl-lg rounded-tr-lg w-full">
-                      <Img
-                        className="h-[58px] md:h-auto ml-[26px] mt-[17px] object-cover w-[58px]"
-                        src="images/img_fullshoppingbasket.png"
-                        alt="fullshoppingbas"
-                      />
-                      <Text
-                        className="mb-1 mt-[22px] md:text-3xl sm:text-[28px] text-[32px] text-white-A700"
-                        size="txtPoppinsSemiBold32WhiteA700"
-                      >
-                        My Cart
-                      </Text>
-                    </div>
-                    <div className="flex flex-col items-center justify-start mt-[310px] w-full h-[1363px]">
-                      <div className="flex flex-col gap-[29px] justify-start w-full">
-                        <div className="absolute flex flex-col gap-[57px] inset-x-[0] justify-start mx-auto top-[10%] w-full ">
-                          {items.map((menuItem, index) => (
-                            <div
-                              key={index}
-                              className="flex flex-col gap-[49px] justify-start md:ml-[0] ml-[88px] w-[81%] md:w-full"
-                            >
-                              <div className="flex flex-row gap-[27px] items-start justify-start ml-5 md:ml-[0] w-[56%] md:w-full">
+                <div className="flex flex-col items-center justify-start w-full">
+                  <div className="bg-teal-800 border border-black-900_1c border-solid flex flex-row gap-[30px] items-end justify-start p-[21px] sm:px-5 rounded-tl-lg rounded-tr-lg w-full">
+                    <Img
+                      className="h-[58px] md:h-auto ml-[26px] mt-[17px] object-cover w-[58px]"
+                      src="images/img_fullshoppingbasket.png"
+                      alt="fullshoppingbas"
+                    />
+                    <Text
+                      className="mb-1 mt-[22px] md:text-3xl sm:text-[28px] text-[32px] text-white-A700"
+                      size="txtPoppinsSemiBold32WhiteA700"
+                    >
+                      My Cart
+                    </Text>
+                  </div>
+                  <div className="flex flex-col items-center justify-start mt-[310px] w-full h-[1363px]">
+                    <div className="flex flex-col gap-[29px] justify-start w-full">
+                      <div className="absolute flex flex-col gap-[57px] inset-x-[0] justify-start mx-auto top-[10%] w-full ">
+                        {items.map((menuItem, index) => (
+                          <div
+                            key={index}
+                            className="flex flex-col gap-[49px] justify-start md:ml-[0] ml-[88px] w-[81%] md:w-full"
+                          >
+                            <div className="flex flex-row gap-[27px] items-start justify-start ml-5 md:ml-[0] w-[56%] md:w-full">
+                              <Text
+                                className="bg-orange-600 flex h-[45px] items-center justify-center mt-[29px] rounded-[22px] text-2xl md:text-[22px] text-center text-white-A700 sm:text-xl w-[45px]"
+                                size="txtPoppinsBold24"
+                              >
+                                {parseInt(itemQuantities[menuItem._id]) || 0}x{" "}
+                                {/* Convert to integer */}
+                              </Text>
+                              <div className="flex flex-col items-start justify-start mb-[17px]">
+                                {/* Log intermediate values for debugging */}
+                                {console.log(
+                                  "Quantity:",
+                                  itemQuantities[menuItem._id]
+                                )}
+                                {console.log(
+                                  "Price:",
+                                  parseFloat(menuItem.price.replace("Rs. ", ""))
+                                )}
                                 <Text
-                                  className="bg-orange-600 flex h-[45px] items-center justify-center mt-[29px] rounded-[22px] text-2xl md:text-[22px] text-center text-white-A700 sm:text-xl w-[45px]"
-                                  size="txtPoppinsBold24"
+                                  className="text-teal-800 text-xl"
+                                  size="txtPoppinsSemiBold20Teal800"
                                 >
-                                  {parseInt(itemQuantities[menuItem._id]) || 0}x{" "}
-                                  {/* Convert to integer */}
+                                  {/* Log intermediate result of multiplication */}
+                                  {parseFloat(
+                                    menuItem.price.replace("Rs. ", "")
+                                  ) *
+                                    (parseInt(itemQuantities[menuItem._id]) ||
+                                      0) || 0}{" "}
+                                  {/* Convert to float */}
                                 </Text>
-                                <div className="flex flex-col items-start justify-start mb-[17px]">
-                                  {/* Log intermediate values for debugging */}
-                                  {console.log(
-                                    "Quantity:",
-                                    itemQuantities[menuItem._id]
-                                  )}
-                                  {console.log(
-                                    "Price:",
-                                    parseFloat(
-                                      menuItem.price.replace("Rs. ", "")
-                                    )
-                                  )}
-                                  <Text
-                                    className="text-teal-800 text-xl"
-                                    size="txtPoppinsSemiBold20Teal800"
-                                  >
-                                    {/* Log intermediate result of multiplication */}
-                                    {parseFloat(
-                                      menuItem.price.replace("Rs. ", "")
-                                    ) *
-                                      (parseInt(itemQuantities[menuItem._id]) ||
-                                        0) || 0}{" "}
-                                    {/* Convert to float */}
-                                  </Text>
-                                  <Text
-                                    className="mt-0.5 text-base text-black-900_01"
-                                    size="txtPoppinsSemiBold16"
-                                  >
-                                    {menuItem.name}
-                                  </Text>
-                                </div>
+                                <Text
+                                  className="mt-0.5 text-base text-black-900_01"
+                                  size="txtPoppinsSemiBold16"
+                                >
+                                  {menuItem.name}
+                                </Text>
                               </div>
                             </div>
-                          ))}
-                          <div className="flex flex-row items-start justify-between mt-[173px] w-[92%] md:w-full">
-                            <Text
-                              className="text-black-900_01 text-xl"
-                              size="txtPoppinsSemiBold20Black90001"
-                            >
-                              Sub Total:{" "}
-                            </Text>
-                            <Text
-                              className="text-2xl md:text-[22px] text-gray-900_01 sm:text-xl"
-                              size="txtPoppinsRegular24Gray90001"
-                            >
-                              {/* Calculate subtotal */}
-                              Rs.
+                          </div>
+                        ))}
+                        <div className="flex flex-row items-start justify-between mt-[173px] w-[92%] md:w-full">
+                          <Text
+                            className="text-black-900_01 text-xl"
+                            size="txtPoppinsSemiBold20Black90001"
+                          >
+                            Sub Total:{" "}
+                          </Text>
+                          <Text
+                            className="text-2xl md:text-[22px] text-gray-900_01 sm:text-xl"
+                            size="txtPoppinsRegular24Gray90001"
+                          >
+                            {/* Calculate subtotal */}
+                            Rs.
+                            {items.reduce((total, menuItem) => {
+                              return (
+                                total +
+                                parseFloat(menuItem.price.replace("Rs. ", "")) *
+                                  (parseInt(itemQuantities[menuItem._id]) || 0)
+                              );
+                            }, 0)}
+                          </Text>
+                        </div>
+                        <Text
+                          className="mt-[13px] text-black-900_01 text-xl"
+                          size="txtPoppinsSemiBold20Black90001"
+                        >
+                          Discounts:
+                        </Text>
+                        <div className="flex flex-row items-start justify-between mt-3.5 w-[89%] md:w-full">
+                          <Text
+                            className="mt-1 text-black-900_01 text-xl"
+                            size="txtPoppinsSemiBold20Black90001"
+                          >
+                            Delivery Fee:
+                          </Text>
+                          <Text
+                            className="text-2xl md:text-[22px] text-gray-900_01 sm:text-xl"
+                            size="txtPoppinsRegular24Gray90001"
+                          >
+                            Rs.200
+                          </Text>
+                        </div>
+                        <Line className="bg-black-900_33 h-px w-full" />
+
+                        <form onSubmit={handleSubmit}>
+                          <button
+                            className="bg-orange-600_cc border border-black-900_1c border-solid flex flex-row items-center justify-between p-1 rounded-lg cursor-pointer"
+                            type="submit"
+                            disabled={loading} // Disable button when loading is true
+                          >
+                            <span className="ml-[26px] text-white-A700 text-xl">
+                              Total to pay
+                            </span>
+                            <span className="my-[3px] text-4xl sm:text-[32px] md:text-[34px] text-white-A700">
+                              Rs. {/* Calculate total amount to pay */}
                               {items.reduce((total, menuItem) => {
                                 return (
                                   total +
@@ -471,66 +553,14 @@ const OrderingPagePage = ({ logoutUser, user }) => {
                                     (parseInt(itemQuantities[menuItem._id]) ||
                                       0)
                                 );
-                              }, 0)}
-                            </Text>
-                          </div>
-                          <Text
-                            className="mt-[13px] text-black-900_01 text-xl"
-                            size="txtPoppinsSemiBold20Black90001"
-                          >
-                            Discounts:
-                          </Text>
-                          <div className="flex flex-row items-start justify-between mt-3.5 w-[89%] md:w-full">
-                            <Text
-                              className="mt-1 text-black-900_01 text-xl"
-                              size="txtPoppinsSemiBold20Black90001"
-                            >
-                              Delivery Fee:
-                            </Text>
-                            <Text
-                              className="text-2xl md:text-[22px] text-gray-900_01 sm:text-xl"
-                              size="txtPoppinsRegular24Gray90001"
-                            >
-                              Rs.200
-                            </Text>
-                          </div>
-                          <Line className="bg-black-900_33 h-px w-full" />
-                          
-                          <form action="/create-checkout-session" method="POST">
-  <button
-    className="bg-orange-600_cc border border-black-900_1c border-solid flex flex-row items-center justify-between p-1 rounded-lg cursor-pointer"
-    type="submit"
-  >
-    <Text
-      className="ml-[26px] text-white-A700 text-xl"
-      size="txtPoppinsSemiBold20WhiteA700"
-    >
-      Total to pay
-    </Text>
-    <Text
-      className="my-[3px] text-4xl sm:text-[32px] md:text-[34px] text-white-A700"
-      size="txtPoppinsSemiBold36"
-    >
-      {/* Calculate total to pay */}
-      Rs.
-      {items.reduce((total, menuItem) => {
-        return (
-          total +
-          parseFloat(menuItem.price.replace("Rs. ", "")) *
-            (parseInt(itemQuantities[menuItem._id]) || 0)
-        );
-      }, 0) + 200}{" "}
-      {/* Add delivery fee */}
-    </Text>
-  </button>
-</form>
-
-                         
-                        </div>
+                              }, 0) + 200}
+                            </span>
+                          </button>
+                        </form>
                       </div>
                     </div>
                   </div>
-                
+                </div>
               </div>
             </div>
           </div>

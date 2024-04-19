@@ -33,7 +33,7 @@ const OrderingPagePage = ({ logoutUser, user }) => {
 
       // Send a POST request to create a checkout session
       const response = await fetch(
-        "http://localhost:3001/create-checkout-session",
+        "http://localhost:3000/create-checkout-session",
         {
           method: "POST",
           headers: {
@@ -45,7 +45,6 @@ const OrderingPagePage = ({ logoutUser, user }) => {
 
       if (!response.ok) {
         throw new Error("Failed to create checkout session");
-        
       }
 
       const { url } = await response.json();
@@ -379,7 +378,7 @@ const OrderingPagePage = ({ logoutUser, user }) => {
                                   className="number"
                                   style={{ fontSize: "30px" }}
                                 >
-                                  {itemQuantities[menuItem._id] || 0}
+                                  {itemQuantities[menuItem._id] || 1}
                                 </span>
                                 <button
                                   className="arrow-button"
@@ -454,7 +453,7 @@ const OrderingPagePage = ({ logoutUser, user }) => {
                                 className="bg-orange-600 flex h-[45px] items-center justify-center mt-[29px] rounded-[22px] text-2xl md:text-[22px] text-center text-white-A700 sm:text-xl w-[45px]"
                                 size="txtPoppinsBold24"
                               >
-                                {parseInt(itemQuantities[menuItem._id]) || 0}x{" "}
+                                {parseInt(itemQuantities[menuItem._id]) || 1}x{" "}
                                 {/* Convert to integer */}
                               </Text>
                               <div className="flex flex-col items-start justify-start mb-[17px]">
@@ -476,7 +475,7 @@ const OrderingPagePage = ({ logoutUser, user }) => {
                                     menuItem.price.replace("Rs. ", "")
                                   ) *
                                     (parseInt(itemQuantities[menuItem._id]) ||
-                                      0) || 0}{" "}
+                                      1) || 1}{" "}
                                   {/* Convert to float */}
                                 </Text>
                                 <Text
@@ -506,17 +505,25 @@ const OrderingPagePage = ({ logoutUser, user }) => {
                               return (
                                 total +
                                 parseFloat(menuItem.price.replace("Rs. ", "")) *
-                                  (parseInt(itemQuantities[menuItem._id]) || 0)
+                                  (parseInt(itemQuantities[menuItem._id]) || 1)
                               );
                             }, 0)}
                           </Text>
                         </div>
-                        <Text
+                        {/* <Text
                           className="mt-[13px] text-black-900_01 text-xl"
                           size="txtPoppinsSemiBold20Black90001"
                         >
                           Discounts:
-                        </Text>
+                        </Text> */}
+                        <div className="flex flex-col items-center justify-start mt-4 w-full">
+                          {/* Button to select location */}
+                          <Button className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer">
+                          <span className="ml-[26px] text-white-A700 text-xl">
+                            Select Your Location
+                            </span>
+                          </Button>
+                        </div>
                         <div className="flex flex-row items-start justify-between mt-3.5 w-[89%] md:w-full">
                           <Text
                             className="mt-1 text-black-900_01 text-xl"
@@ -551,7 +558,7 @@ const OrderingPagePage = ({ logoutUser, user }) => {
                                     menuItem.price.replace("Rs. ", "")
                                   ) *
                                     (parseInt(itemQuantities[menuItem._id]) ||
-                                      0)
+                                      1)
                                 );
                               }, 0) + 200}
                             </span>

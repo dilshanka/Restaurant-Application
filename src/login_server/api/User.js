@@ -46,40 +46,24 @@ const path=require("path");
 const { error } = require('console');
 const { errorMonitor } = require('events');
 
-
-
-
-const YOUR_DOMAIN = 'http://localhost:3000';
-
-app.post("/create-checkout-session", async (req, res) => {
+ // Delete item from the cart
+router.delete('/cart/:userId/:itemId', async (req, res) => {
     try {
-      // Retrieve items from the user's cart in the database based on the user's email
-      const userEmail = req.body.userEmail; // Assuming the client sends the user's email
-      const cartItems = await Cart.find({ userId: userEmail });
-  
-      // Create line items array based on cart items
-      const lineItems = cartItems.map(item => ({
-        price: item.price, // Assuming each item in the cart has a 'price' field representing the Stripe Price ID
-        quantity: item.quantity, // Assuming each item in the cart has a 'quantity' field representing the quantity
-      }));
-  
-      // Create a checkout session with the retrieved line items
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        line_items: lineItems,
-        mode: 'payment',
-        success_url: `${YOUR_DOMAIN}/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${YOUR_DOMAIN}/cancel`,
-      });
-  
-      // Redirect the client to the checkout session URL
-      res.redirect(303, session.url);
+        const { userId, itemId } = req.params;
+
+        // Assuming your Cart model has a unique item ID field called `_id`
+        await Cart.findOneAndDelete({ userId, _id: itemId });
+
+        res.status(200).json({ message: 'Item deleted from the cart successfully' });
     } catch (error) {
-      console.error('Error creating checkout session:', error);
-      res.status(500).json({ error: 'Failed to create checkout session' });
+        console.error(error);
+        res.status(500).json({
+            status: "FAILED",
+            message: "An error occurred while deleting the item from the cart",
+        });
     }
-  });
-  
+});
+ 
   
 
 

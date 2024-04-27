@@ -1,24 +1,33 @@
-import React, { useRef, useState } from 'react';
-import { useJsApiLoader, GoogleMap, Marker, DirectionsRenderer } from '@react-google-maps/api';
-import { FaLocationArrow, FaTimes } from 'react-icons/fa';
+import React, { useRef, useState } from "react";
+import {
+  useJsApiLoader,
+  GoogleMap,
+  Marker,
+  DirectionsRenderer,
+  Autocomplete,
+} from "@react-google-maps/api";
+import { FaLocatioanArrow, FaTimes } from "react-icons/fa";
 
-const center = { lat: 48.8584, lng: 2.2945 };
+const center = { lat: 6.066150445841883, lng: 80.23558436213095 };
+
 
 function Map() {
+  const REACT_APP_GOOGLE_MAPS_API_KEY =
+    "AIzaSyD-dc1gOI7HwWAI8-6LVeIJm2yyRBbJoVU";
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries: ['places'],
+    googleMapsApiKey: REACT_APP_GOOGLE_MAPS_API_KEY,
+    libraries: ["places"],
   });
 
   const [map, setMap] = useState(null);
   const [directionsResponse, setDirectionsResponse] = useState(null);
-  const [distance, setDistance] = useState('');
-  const [duration, setDuration] = useState('');
+  const [distance, setDistance] = useState("");
+  const [duration, setDuration] = useState("");
   const originRef = useRef();
   const destinationRef = useRef();
 
   async function calculateRoute() {
-    if (originRef.current.value === '' || destinationRef.current.value === '') {
+    if (originRef.current.value === "" || destinationRef.current.value === "") {
       return;
     }
     const directionsService = new window.google.maps.DirectionsService();
@@ -34,51 +43,102 @@ function Map() {
 
   function clearRoute() {
     setDirectionsResponse(null);
-    setDistance('');
-    setDuration('');
-    originRef.current.value = '';
-    destinationRef.current.value = '';
+    setDistance("");
+    setDuration("");
+    originRef.current.value = "";
+    destinationRef.current.value = "";
   }
 
   return (
-    <div style={{ position: 'relative', height: '100vh', width: '100vw' }}>
+    <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
       {isLoaded && (
         <GoogleMap
           center={center}
           zoom={15}
-          mapContainerStyle={{ width: '100%', height: '100%' }}
+          mapContainerStyle={{ width: "100%", height: "100%" }}
           options={{
             zoomControl: false,
             streetViewControl: false,
             mapTypeControl: false,
             fullscreenControl: false,
           }}
-          onLoad={map => setMap(map)}
+          onLoad={(map) => setMap(map)}
         >
           <Marker position={center} />
-          {directionsResponse && <DirectionsRenderer directions={directionsResponse} />}
+          {directionsResponse && (
+            <DirectionsRenderer directions={directionsResponse} />
+          )}
         </GoogleMap>
       )}
       <div
         style={{
-          position: 'absolute',
-          top: '10%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          padding: '10px',
-          backgroundColor: 'white',
-          borderRadius: '8px',
-          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+          position: "absolute",
+          top: "30%",
+          left: "20%",
+          transform: "translate(-50%, -50%)",
+          padding: "20px",
+          backgroundColor: "white",
+          borderRadius: "8px",
+          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <input type="text" placeholder="Origin" ref={originRef} />
-        <input type="text" placeholder="Destination" ref={destinationRef} />
-        <button onClick={calculateRoute}>Calculate Route</button>
-        <button onClick={clearRoute}>Clear Route</button>
+        <Autocomplete
+          onLoad={(autocomplete) => (originRef.current = autocomplete)}
+          onPlaceChanged={() => {
+            const place = originRef.current.getPlace();
+            originRef.current.value = place.formatted_address;
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Origin"
+            ref={originRef}
+            style={{ padding: "8px", marginBottom: "28px" }}
+          />
+        </Autocomplete>
+        <Autocomplete
+          onLoad={(autocomplete) => (destinationRef.current = autocomplete)}
+          onPlaceChanged={() => {
+            const place = destinationRef.current.getPlace();
+            destinationRef.current.value = place.formatted_address;
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Destination"
+            ref={destinationRef}
+            style={{ padding: "8px", marginBottom: "8px" }}
+          />
+        </Autocomplete>
+        <button
+          className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer"
+          onClick={calculateRoute}
+          style={{ padding: "8px", marginBottom: "8px" }}
+        >
+          Calculate Route
+        </button>
+        <button
+          className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer"
+          onClick={clearRoute}
+          style={{ padding: "8px", marginBottom: "8px" }}
+        >
+          Clear Route
+        </button>
         <div>
-          <span>Distance: {distance}</span>
-          <span>Duration: {duration}</span>
+          <span
+            className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer"
+            style={{ padding: "8px", marginBottom: "8px" }}
+          >
+            Distance: {distance}
+          </span>
+          <span
+            className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer"
+            style={{ padding: "8px", marginBottom: "8px" }}
+          >
+            Duration: {duration}
+          </span>
         </div>
+
         {map && (
           <button
             onClick={() => {

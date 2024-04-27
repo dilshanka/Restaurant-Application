@@ -12,10 +12,19 @@
 
 // export default App;
 // Pages
+// import Admin from "./Admin/pages/home/Home"
+// import UserList from "./Admin/pages/userList/UserList"
+// import User from "./Admin/pages/user/User"
+// import NewUser from "./Admin/pages/newUser/NewUser";
+// import ProductList from "./Admin/pages/productList/ProductList";
+// import Product from "./Admin/pages/product/Product";
+// import NewProduct from "./Admin/pages/newProduct/NewProduct";
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/HomeDesktopLighterVersion/index";
+// import Admin from "./pages/FoodDeliveryDashboard/index"
 
 import { StyledContainer } from "./components/Styles";
 import { Link } from "react-router-dom";
@@ -36,6 +45,7 @@ import OrderingPagePage from "pages/OrderingPage";
 import HomeDesktopLighterVersion from "pages/HomeDesktopLighterVersion"
 import MacBookPro14OnePage from "pages/MacBookPro14One";
 import PaymentForm from "pages/PaymentForm/PaymentForm";
+import Map from "pages/Map";
 function App({ checked }) {
   return (
     <BrowserRouter>
@@ -47,8 +57,9 @@ function App({ checked }) {
             <Route path="/" element={<Dashboard />} />
             <Route path="/loginorreg" element={<Home />} />
             <Route path="/forgottenpassword" element={<ForgottenPassword />} />
-
-            {/* <Route path="/emailsent/:userEmail/:reset" element={<EmailSent />} /> */}
+            {/* <Route path="/admin" element={<Admin/>}/> */}
+            <Route path="/map" element={<Map/>}/>
+          
             <Route path="emailsent">
               <Route path=":userEmail">
                 <Route path=":reset" element={<EmailSent/>}/>

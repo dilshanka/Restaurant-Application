@@ -518,7 +518,8 @@ const OrderingPagePage = ({ logoutUser, user }) => {
                         </Text> */}
                         <div className="flex flex-col items-center justify-start mt-4 w-full">
                           {/* Button to select location */}
-                          <Button className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer">
+                          <Button className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer"
+                          onClick={() => navigate('/map')}>
                           <span className="ml-[26px] text-white-A700 text-xl">
                             Select Your Location
                             </span>

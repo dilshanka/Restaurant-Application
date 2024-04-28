@@ -1,6 +1,7 @@
 import React from "react";
 import "./index.css";
 import { useState } from "react";
+import { Helmet } from "react-helmet";
 
 import { Button, Img, Input, Line, List, Text } from "components";
 import { connect } from "react-redux";
@@ -20,24 +21,24 @@ const HomeDesktopLighterVersionPage = ({ logoutUser, user }) => {
   const handleLogout = async () => {
     try {
       // Make a request to your backend endpoint to clear the user's cart
-      const response = await fetch('http://localhost:5000/user/cart/clear', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/user/cart/clear", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ userId: user.email }),
       });
-  
+
       if (response.ok) {
         // Handle success, e.g., show a success message
-        console.log('User logged out successfully');
+        console.log("User logged out successfully");
       } else {
         // Handle failure, e.g., show an error message
-        console.error('Failed to log out user');
+        console.error("Failed to log out user");
       }
     } catch (error) {
       // Handle unexpected errors
-      console.error('An error occurred during logout:', error);
+      console.error("An error occurred during logout:", error);
     }
   };
 
@@ -62,8 +63,9 @@ const HomeDesktopLighterVersionPage = ({ logoutUser, user }) => {
                     <button className="text-white font-poppins font-medium text-lg hover-effect focus:outline-none nav-button">
                       Home
                     </button>
-                    <button className="text-black-900_01 font-poppins font-medium text-lg hover-effect focus:outline-none nav-button"
-                    onClick={() => navigate('/loginorreg')}
+                    <button
+                      className="text-black-900_01 font-poppins font-medium text-lg hover-effect focus:outline-none nav-button"
+                      onClick={() => navigate("/loginorreg")}
                     >
                       Browse Menu
                     </button>
@@ -299,7 +301,6 @@ const HomeDesktopLighterVersionPage = ({ logoutUser, user }) => {
                       href="#"
                       className="block h-[325px] m-auto rounded-[12px] w-full overflow-hidden focus:outline-none"
                     >
-                      
                       <img
                         className="h-[325px] m-auto object-cover w-full transition-transform duration-300 transform hover:scale-105 focus:scale-105"
                         src="images/img_rectangle8_325x496.png"
@@ -312,14 +313,14 @@ const HomeDesktopLighterVersionPage = ({ logoutUser, user }) => {
                         className="block h-[325px] m-auto rounded-[12px] w-full overflow-hidden focus:outline-none"
                       >
                         <Link
-                      to="/loginorreg"
-                      className="block h-[325px] m-auto rounded-[12px] w-full overflow-hidden focus:outline-none"
-                    >
-                        <img
-                          className="h-[325px] m-auto object-cover w-full transition-transform duration-300 transform hover:scale-105 focus:scale-105"
-                          src="images/img_rectangle9_325x496.png"
-                          alt="rectangleNine"
-                        />
+                          to="/loginorreg"
+                          className="block h-[325px] m-auto rounded-[12px] w-full overflow-hidden focus:outline-none"
+                        >
+                          <img
+                            className="h-[325px] m-auto object-cover w-full transition-transform duration-300 transform hover:scale-105 focus:scale-105"
+                            src="images/img_rectangle9_325x496.png"
+                            alt="rectangleNine"
+                          />
                         </Link>
                       </a>
                       <div className="absolute bottom-[11%] flex flex-col items-center justify-start left-[9%]">
@@ -347,14 +348,14 @@ const HomeDesktopLighterVersionPage = ({ logoutUser, user }) => {
                       className="block h-[325px] m-auto object-cover rounded-[12px] w-full overflow-hidden focus:outline-none"
                     >
                       <Link
-                      to="/loginorreg"
-                      className="block h-[325px] m-auto rounded-[12px] w-full overflow-hidden focus:outline-none"
-                    >
-                      <img
-                        className="h-[325px] m-auto object-cover w-full transition-transform duration-300 transform hover:scale-105 focus:scale-105"
-                        src="images/img_rectangle9_1.png"
-                        alt="rectangleNine"
-                      />
+                        to="/loginorreg"
+                        className="block h-[325px] m-auto rounded-[12px] w-full overflow-hidden focus:outline-none"
+                      >
+                        <img
+                          className="h-[325px] m-auto object-cover w-full transition-transform duration-300 transform hover:scale-105 focus:scale-105"
+                          src="images/img_rectangle9_1.png"
+                          alt="rectangleNine"
+                        />
                       </Link>
                     </a>
                     <div className="absolute bottom-[11%] flex flex-col items-start justify-start left-[9%]">
@@ -407,7 +408,6 @@ const HomeDesktopLighterVersionPage = ({ logoutUser, user }) => {
                     >
                       Fried Rice
                     </Text>
-                    
                   </div>
                 </a>
 
@@ -427,7 +427,6 @@ const HomeDesktopLighterVersionPage = ({ logoutUser, user }) => {
                     >
                       Salad
                     </Text>
-                    
                   </div>
                 </a>
 
@@ -447,7 +446,6 @@ const HomeDesktopLighterVersionPage = ({ logoutUser, user }) => {
                     >
                       Pasta
                     </Text>
-                   
                   </div>
                 </a>
 
@@ -467,7 +465,6 @@ const HomeDesktopLighterVersionPage = ({ logoutUser, user }) => {
                     >
                       Pizza
                     </Text>
-                    
                   </div>
                 </a>
 
@@ -487,7 +484,6 @@ const HomeDesktopLighterVersionPage = ({ logoutUser, user }) => {
                     >
                       Burgers
                     </Text>
-                    
                   </div>
                 </a>
 
@@ -507,13 +503,20 @@ const HomeDesktopLighterVersionPage = ({ logoutUser, user }) => {
                     >
                       Kottu
                     </Text>
-                    
                   </div>
                 </a>
               </div>
             </div>
           </div>
         </div>
+        <Helmet>
+        <script src="https://static.elfsight.com/platform/platform.js" defer />
+      </Helmet>
+      <div
+        className="elfsight-app-fd76f4b6-e0fc-4e44-98f9-82fc7d69a499"
+        data-elfsight-app-lazy
+        style={{ paddingTop: "30px" }} // Adjust the padding as needed
+      />
         <div className="flex flex-col font-poppins items-center justify-start mt-5 w-full">
           <div className="sm:h-[2500px] h-[2520px] md:h-[3135px] md:px-5 relative w-full">
             <Img

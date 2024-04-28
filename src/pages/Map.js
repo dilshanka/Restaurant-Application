@@ -8,7 +8,7 @@ import {
 } from "@react-google-maps/api";
 import { FaLocatioanArrow, FaTimes } from "react-icons/fa";
 
-const center = { lat: 6.066150445841883, lng: 80.23558436213095 };
+const center = { lat: 6.065240291148039, lng: 80.2352684881948 };
 
 
 function Map() {

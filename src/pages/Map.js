@@ -6,10 +6,9 @@ import {
   DirectionsRenderer,
   Autocomplete,
 } from "@react-google-maps/api";
-import { FaLocatioanArrow, FaTimes } from "react-icons/fa";
+import { FaLocationArrow, FaTimes } from "react-icons/fa";
 
 const center = { lat: 6.065240291148039, lng: 80.2352684881948 };
-
 
 function Map() {
   const REACT_APP_GOOGLE_MAPS_API_KEY =
@@ -50,107 +49,111 @@ function Map() {
   }
 
   return (
-    <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
-      {isLoaded && (
-        <GoogleMap
-          center={center}
-          zoom={15}
-          mapContainerStyle={{ width: "100%", height: "100%" }}
-          options={{
-            zoomControl: false,
-            streetViewControl: false,
-            mapTypeControl: false,
-            fullscreenControl: false,
-          }}
-          onLoad={(map) => setMap(map)}
-        >
-          <Marker position={center} />
-          {directionsResponse && (
-            <DirectionsRenderer directions={directionsResponse} />
-          )}
-        </GoogleMap>
-      )}
-      <div
-        style={{
-          position: "absolute",
-          top: "30%",
-          left: "20%",
-          transform: "translate(-50%, -50%)",
-          padding: "20px",
-          backgroundColor: "white",
-          borderRadius: "8px",
-          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        <Autocomplete
-          onLoad={(autocomplete) => (originRef.current = autocomplete)}
-          onPlaceChanged={() => {
-            const place = originRef.current.getPlace();
-            originRef.current.value = place.formatted_address;
-          }}
-        >
-          <input
-            type="text"
-            placeholder="Origin"
-            ref={originRef}
-            style={{ padding: "8px", marginBottom: "28px" }}
-          />
-        </Autocomplete>
-        <Autocomplete
-          onLoad={(autocomplete) => (destinationRef.current = autocomplete)}
-          onPlaceChanged={() => {
-            const place = destinationRef.current.getPlace();
-            destinationRef.current.value = place.formatted_address;
-          }}
-        >
-          <input
-            type="text"
-            placeholder="Destination"
-            ref={destinationRef}
-            style={{ padding: "8px", marginBottom: "8px" }}
-          />
-        </Autocomplete>
-        <button
-          className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer"
-          onClick={calculateRoute}
-          style={{ padding: "8px", marginBottom: "8px" }}
-        >
-          Calculate Route
-        </button>
-        <button
-          className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer"
-          onClick={clearRoute}
-          style={{ padding: "8px", marginBottom: "8px" }}
-        >
-          Clear Route
-        </button>
-        <div>
-          <span
-            className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer"
-            style={{ padding: "8px", marginBottom: "8px" }}
+    <>
+      {isLoaded ? (
+        <div style={{ position: "relative", height: "100vh", width: "100vw" }}>
+          <GoogleMap
+            center={center}
+            zoom={15}
+            mapContainerStyle={{ width: "100%", height: "100%" }}
+            options={{
+              zoomControl: false,
+              streetViewControl: false,
+              mapTypeControl: false,
+              fullscreenControl: false,
+            }}
+            onLoad={(map) => setMap(map)}
           >
-            Distance: {distance}
-          </span>
-          <span
-            className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer"
-            style={{ padding: "8px", marginBottom: "8px" }}
-          >
-            Duration: {duration}
-          </span>
-        </div>
-
-        {map && (
-          <button
-            onClick={() => {
-              map.panTo(center);
-              map.setZoom(15);
+            <Marker position={center} />
+            {directionsResponse && (
+              <DirectionsRenderer directions={directionsResponse} />
+            )}
+          </GoogleMap>
+          <div
+            style={{
+              position: "absolute",
+              top: "30%",
+              left: "20%",
+              transform: "translate(-50%, -50%)",
+              padding: "20px",
+              backgroundColor: "white",
+              borderRadius: "8px",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
             }}
           >
-            Center Map
-          </button>
-        )}
-      </div>
-    </div>
+            <Autocomplete
+              onLoad={(autocomplete) => (originRef.current = autocomplete)}
+              onPlaceChanged={() => {
+                const place = originRef.current.getPlace();
+                originRef.current.value = place.formatted_address;
+              }}
+            >
+              <input
+                type="text"
+                placeholder="Origin"
+                ref={originRef}
+                style={{ padding: "8px", marginBottom: "28px" }}
+              />
+            </Autocomplete>
+            <Autocomplete
+              onLoad={(autocomplete) => (destinationRef.current = autocomplete)}
+              onPlaceChanged={() => {
+                const place = destinationRef.current.getPlace();
+                destinationRef.current.value = place.formatted_address;
+              }}
+            >
+              <input
+                type="text"
+                placeholder="Destination"
+                ref={destinationRef}
+                style={{ padding: "8px", marginBottom: "8px" }}
+              />
+            </Autocomplete>
+            <button
+              className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer"
+              onClick={calculateRoute}
+              style={{ padding: "8px", marginBottom: "8px" }}
+            >
+              Calculate Route
+            </button>
+            <button
+              className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer"
+              onClick={clearRoute}
+              style={{ padding: "8px", marginBottom: "8px" }}
+            >
+              Clear Route
+            </button>
+            <div>
+              <span
+                className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer"
+                style={{ padding: "8px", marginBottom: "8px" }}
+              >
+                Distance: {distance}
+              </span>
+              <span
+                className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer"
+                style={{ padding: "8px", marginBottom: "8px" }}
+              >
+                Duration: {duration}
+              </span>
+            </div>
+
+            {map && (
+              <button
+                onClick={() => {
+                  map.panTo(center);
+                  map.setZoom(15);
+                }}
+              >
+                Center Map
+              </button>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div>Loading...</div>
+      )}
+    </>
   );
 }
 

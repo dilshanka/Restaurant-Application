@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { Button, Img, Input, Line, List, Text } from "components";
 import { connect } from "react-redux";
 import { loadStripe } from "@stripe/stripe-js";
+import ReactWhatsapp from "react-whatsapp";
 
 const OrderingPagePage = ({ logoutUser, user }) => {
   const navigate = useNavigate();
@@ -15,6 +16,27 @@ const OrderingPagePage = ({ logoutUser, user }) => {
   const [items, setItems] = useState([]);
   const [isHovered, setIsHovered] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [wmessage, setWMessage] = useState("");
+  const handleSendMessage = () => {
+    // Generate the message dynamically based on the items in the cart
+    const cartItemsMessage = items.map((menuItem) => {
+        const totalPrice = parseFloat(menuItem.price.replace("Rs. ", "")) * (parseInt(itemQuantities[menuItem._id]) || 1);
+        return `${menuItem.name} - Rs. ${menuItem.price} x${itemQuantities[menuItem._id] || 1} = Rs. ${totalPrice.toFixed(2)}`;
+    }).join('\n'); // Separate each item with a new line
+  
+    // Calculate total amount to pay
+    const totalAmount = items.reduce((total, menuItem) => {
+        return total + parseFloat(menuItem.price.replace("Rs. ", "")) * (parseInt(itemQuantities[menuItem._id]) || 1);
+    }, 0) + 200; // Add delivery fee
+
+    // Set the message state with the dynamically generated message
+    setWMessage(`Hello New Order!\n\nItems in the cart:\n${cartItemsMessage}\n\nTotal Amount to Pay: Rs. ${totalAmount.toFixed(2)}\nDelivery Fee: Rs. 200`);
+};
+
+
+
+
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -518,12 +540,23 @@ const OrderingPagePage = ({ logoutUser, user }) => {
                         </Text> */}
                         <div className="flex flex-col items-center justify-start mt-4 w-full">
                           {/* Button to select location */}
-                          <Button className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer"
-                          onClick={() => navigate('/map')}>
-                          <span className="ml-[26px] text-white-A700 text-xl">
-                            Select Your Location
+                          <Button
+                            className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer"
+                            onClick={() => navigate("/map")}
+                          >
+                            <span className="ml-[26px] text-white-A700 text-xl">
+                              Select Your Location
                             </span>
                           </Button>
+
+                          <ReactWhatsapp
+                            number="+94 0741112634"
+                            className="bg-orange-600_cc border border-black-1900_1c border-solid flex flex-row items-center justify-between p-4 rounded-lg cursor-pointer"
+                            message={wmessage}
+                            onClick={handleSendMessage} // Call handleSendMessage when button is clicked
+                          >
+                            Place Order
+                          </ReactWhatsapp>
                         </div>
                         <div className="flex flex-row items-start justify-between mt-3.5 w-[89%] md:w-full">
                           <Text

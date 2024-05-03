@@ -9,6 +9,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const UserVerification=require('./../models/UserVerification');
 const PasswordReset=require('./../models/PasswordReset');
 const Cart=require('./../models/Cart')
+const Destination = require('./../models/Destination');
 
 //email handler
 const nodemailer=require("nodemailer");
@@ -45,6 +46,26 @@ const bcrypt=require('bcrypt');
 const path=require("path");
 const { error } = require('console');
 const { errorMonitor } = require('events');
+router.post('/save-destination', async (req, res) => {
+    try {
+      const { email, destination } = req.body;
+  
+      // Create a new Destination document
+      const newDestination = new Destination({
+        email,
+        destination,
+      });
+  
+      // Save the destination to MongoDB
+      await newDestination.save();
+  
+      res.status(200).json({ message: 'Destination saved successfully' });
+    } catch (error) {
+      console.error('Error saving destination:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+  
 
  // Delete item from the cart
 router.delete('/cart/:userId/:itemId', async (req, res) => {

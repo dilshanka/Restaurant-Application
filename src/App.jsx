@@ -46,6 +46,7 @@ import HomeDesktopLighterVersion from "pages/HomeDesktopLighterVersion"
 import MacBookPro14OnePage from "pages/MacBookPro14One";
 import PaymentForm from "pages/PaymentForm/PaymentForm";
 import Map from "pages/Map";
+import Gallery from "pages/Gallery/gallery";
 function App({ checked }) {
   return (
     <BrowserRouter>
@@ -54,6 +55,7 @@ function App({ checked }) {
           <Routes>
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/gallery" element={<Gallery/>}/>
             <Route path="/" element={<Dashboard />} />
             <Route path="/loginorreg" element={<Home />} />
             <Route path="/forgottenpassword" element={<ForgottenPassword />} />
